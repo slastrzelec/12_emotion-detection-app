@@ -5,6 +5,8 @@ import cv2
 import numpy as np
 from PIL import Image
 from torchvision import transforms
+import requests
+from io import BytesIO
 
 # Page settings
 st.set_page_config(
@@ -78,6 +80,17 @@ def load_model():
 @st.cache_resource
 def load_face_cascade():
     return cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+# Load test photo
+def load_test_photo():
+    """Load test photo from GitHub"""
+    url = "https://raw.githubusercontent.com/slastrzelec/12_emotion-detection-app/main/test_photo.jpg"
+    try:
+        response = requests.get(url)
+        img = Image.open(BytesIO(response.content))
+        return img
+    except:
+        return None
 
 # Load resources
 with st.spinner('Loading model...'):
@@ -165,8 +178,9 @@ st.sidebar.title("ℹ️ Information")
 st.sidebar.markdown("""
 ### How to use:
 1. Upload an image (JPG/PNG)
-2. Click "Analyze"
-3. View results!
+2. Or click "Load Test Photo"
+3. Click "Analyze"
+4. View results!
 
 ### Model:
 - **Architecture**: CNN (4 layers)
@@ -180,6 +194,17 @@ st.sidebar.markdown("""
 - Streamlit
 """)
 
+st.sidebar.markdown("---")
+
+# Test Photo Button
+if st.sidebar.button("📸 Load Test Photo", use_container_width=True):
+    test_img = load_test_photo()
+    if test_img:
+        st.session_state['test_image'] = test_img
+        st.sidebar.success("✅ Test photo loaded!")
+    else:
+        st.sidebar.error("❌ Failed to load test photo")
+
 # Main content
 col1, col2 = st.columns([1, 1])
 
@@ -187,10 +212,17 @@ with col1:
     st.subheader("📤 Upload Image")
     uploaded_file = st.file_uploader("Choose an image...", type=['jpg', 'jpeg', 'png'])
     
-    if uploaded_file is not None:
+    # Display image
+    if 'test_image' in st.session_state:
+        image = st.session_state['test_image']
+        st.image(image, caption='Test Photo', use_container_width=True)
+    elif uploaded_file is not None:
         image = Image.open(uploaded_file)
         st.image(image, caption='Uploaded Image', use_container_width=True)
-        
+    else:
+        image = None
+    
+    if image is not None:
         if st.button("🔍 Analyze", type="primary", use_container_width=True):
             with st.spinner('Analyzing...'):
                 processed_img, results = process_image(image)
@@ -198,6 +230,10 @@ with col1:
                 # Save results in session state
                 st.session_state['processed_img'] = processed_img
                 st.session_state['results'] = results
+                
+                # Clear test image after analysis
+                if 'test_image' in st.session_state:
+                    del st.session_state['test_image']
 
 with col2:
     st.subheader("📊 Results")
@@ -230,4 +266,4 @@ st.markdown("""
 <div style='text-align: center'>
     <p>🚀 Project: Emotion Recognition | OpenCV + PyTorch</p>
 </div>
-""", unsafe_allow_html=True)    
+""", unsafe_allow_html=True)
