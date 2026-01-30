@@ -196,6 +196,59 @@ st.sidebar.markdown("""
 
 st.sidebar.markdown("---")
 
+# About Me Section (EXPANDED)
+st.sidebar.markdown("### 👨‍💻 About the Developer")
+
+try:
+    photo_url = "https://raw.githubusercontent.com/slastrzelec/12_emotion-detection-app/main/test_photo.jpg"
+    st.sidebar.image(photo_url, use_container_width=True)
+except:
+    pass
+
+st.sidebar.markdown("""
+**Sławomir Strzelec**  
+*Data Scientist | AI/ML Engineer*
+
+📍 Kraków, Poland  
+📧 sla.strzelec@gmail.com  
+
+---
+
+**Links:**  
+🔗 [LinkedIn](https://www.linkedin.com/in/s%C5%82awomir-strzelec/)  
+💻 [GitHub](https://github.com/slastrzelec)  
+📊 [Project Repository](https://github.com/slastrzelec/12_emotion-detection-app)
+
+---
+
+**About This Project:**  
+Custom CNN trained on FER-2013 dataset (35k images) to recognize 7 emotions in real-time. Demonstrates end-to-end ML pipeline from data preprocessing to cloud deployment.
+
+**Tech Stack:**  
+- PyTorch (Deep Learning)  
+- OpenCV (Face Detection)  
+- Streamlit (Web Deployment)  
+- AWS S3 (Data Storage)  
+- Git & GitHub (Version Control)
+
+**Skills Demonstrated:**  
+✓ CNN Architecture Design  
+✓ Computer Vision Pipeline  
+✓ Model Training & Optimization  
+✓ Production Deployment  
+✓ Clean Code Practices  
+✓ Cloud Integration (AWS)
+
+**Model Performance:**  
+- Training Images: 28,709  
+- Test Images: 7,178  
+- Parameters: ~11 Million  
+- Accuracy: 59.64%  
+- Inference Time: ~50ms per face
+""")
+
+st.sidebar.markdown("---")
+
 # Test Photo Button
 if st.sidebar.button("📸 Load Test Photo", use_container_width=True):
     test_img = load_test_photo()
@@ -265,5 +318,9 @@ st.markdown("---")
 st.markdown("""
 <div style='text-align: center'>
     <p>🚀 Project: Emotion Recognition | OpenCV + PyTorch</p>
+    <p style='font-size: 0.9rem; color: #666;'>
+        Built by Sławomir Strzelec | 
+        <a href='https://github.com/slastrzelec/12_emotion-detection-app' style='color: #0066cc; text-decoration: none;'>View on GitHub</a>
+    </p>
 </div>
 """, unsafe_allow_html=True)
